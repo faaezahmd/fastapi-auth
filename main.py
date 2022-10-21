@@ -151,8 +151,8 @@ async def reset_request(user_email: schemas.PasswordReset , db: Session = Depend
     else:
          raise HTTPException(status_code=400, detail="This email not found")
 
-import uvicorn
+# import uvicorn
 
-if __name__ == '__main__':
-    uvicorn.run("main:app", host="localhost", port=8008,
-                reload=True, log_level="info")
+# if __name__ == '__main__':
+#     uvicorn.run("main:app", host="localhost", port=8008,
+#                 reload=True, log_level="info")
