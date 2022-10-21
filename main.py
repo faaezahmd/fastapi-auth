@@ -8,6 +8,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 models.Base.metadata.create_all(bind=engine)
@@ -47,8 +48,8 @@ class Settings(BaseModel):
     authjwt_token_location: set = {"cookies"}
     # Disable CSRF Protection for this example. default is True
     authjwt_cookie_csrf_protect: bool = False
-    authjwt_cookie_samesite: str = "none"
-    authjwt_cookie_secure: bool = True
+    # authjwt_cookie_samesite: str = "none"
+    # authjwt_cookie_secure: bool = True
 
 @AuthJWT.load_config
 def get_config():
@@ -83,13 +84,28 @@ async def login(user: User, Authorize: AuthJWT = Depends(),db: Session = Depends
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     access_token = Authorize.create_access_token(subject=user.username)
-    refresh_token = Authorize.create_refresh_token(subject=user.username)
+    # refresh_token = Authorize.create_refresh_token(subject=user.username)
 
      # Set the JWT cookies in the response
-    Authorize.set_access_cookies(access_token)
-    Authorize.set_refresh_cookies(refresh_token)
+    # Authorize.set_access_cookies(access_token)
+    # Authorize.set_refresh_cookies(refresh_token)
 
-    return {"success": True, "custom": "True" , "username": user.username, "accessToken": access_token  }
+    token = jsonable_encoder(access_token)
+    content = {"message": "You've sucessfully logged in"}
+    response = JSONResponse(content=content)
+    response.set_cookie(
+        "Authorization",
+        value=f"Bearer {token}",
+        httponly=True,
+        max_age=1800,
+        expires=1800,
+        samesite="None",
+        secure=True,
+    )
+
+    return response
+
+    # return {"success": True, "custom": "True" , "username": user.username, "accessToken": access_token  }
 
 @app.post('/refresh')
 def refresh(Authorize: AuthJWT = Depends()):
