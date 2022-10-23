@@ -100,7 +100,7 @@ async def login(user: User, Authorize: AuthJWT = Depends(),db: Session = Depends
         max_age=1800,
         expires=1800,
         samesite="None",
-        secure=True,
+        domain="heroku.com"
     )
 
     return response
