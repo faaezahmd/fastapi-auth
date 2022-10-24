@@ -99,7 +99,8 @@ async def login(user: User, Authorize: AuthJWT = Depends(),db: Session = Depends
         httponly=True,
         max_age=1800,
         expires=1800,
-        samesite="None"
+        samesite="None",
+        secure=True
     )
 
     return response
