@@ -20,11 +20,11 @@ origins = [
     "https://analytics-dev.traderverse.io/"
     "http://localhost",
     "http://localhost:8081",
-    "*"
+    "https://vue-auth-front-end.herokuapp.com/"
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allows all origins,
+    allow_origins=origins, # Allows all origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
