@@ -100,12 +100,10 @@ async def login(user: User, Authorize: AuthJWT = Depends(),db: Session = Depends
         max_age=1800,
         expires=1800,
         samesite="None",
-        secure=True
+        secure=True,
     )
 
     return response
-
-    # return {"success": True, "custom": "True" , "username": user.username, "accessToken": access_token  }
 
 @app.post('/refresh')
 def refresh(Authorize: AuthJWT = Depends()):
